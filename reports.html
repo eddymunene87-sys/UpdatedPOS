@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Reports</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>POS</h2>
+        </div>
+        <ul>
+            <li>
+                <a href="dashboard.html">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="sales.html">
+                    <i class="fas fa-cash-register"></i>
+                    <span>Sales</span>
+                </a>
+            </li>
+            <li>
+                <a href="products.html">
+                    <i class="fas fa-box"></i>
+                    <span>Products</span>
+                </a>
+            </li>
+            <li>
+                <a href="inventory.html">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Inventory</span>
+                </a>
+            </li>
+            <li>
+                <a href="categories.html">
+                    <i class="fas fa-tags"></i>
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="repairs.html">
+                    <i class="fas fa-tools"></i>
+                    <span>Repairs</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="reports.html">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <h1>Reports</h1>
+            <div class="user">
+                <i class="fas fa-user-circle"></i>
+                Admin
+            </div>
+        </header>
+
+        <section class="search-section">
+            <div class="report-summary">
+                <h2>Business reports</h2>
+                <p>Generate profit, seller, stock, and payment reports, then export them to Excel.</p>
+            </div>
+
+            <div class="report-actions">
+                <button class="report-btn" data-report="profit">Generate Profit Report</button>
+                <button class="report-btn" data-report="seller">Generate Seller Sales Report</button>
+                <button class="report-btn" data-report="stock">Generate Out-of-Stock Report</button>
+                <button class="report-btn" data-report="payment">Generate Payment Report</button>
+            </div>
+
+            <div id="reportSummary" class="report-summary-card hidden"></div>
+            <div id="reportResults" class="report-results"></div>
+
+            <div class="report-summary" style="margin-top:24px;">
+                <h2>Saved Sales History</h2>
+                <p>All completed sales are stored locally and displayed below.</p>
+            </div>
+            <div class="form-grid" style="margin-top:12px; margin-bottom:8px;">
+                <div class="form-group">
+                    <label for="sellerFilter">Filter by Seller</label>
+                    <select id="sellerFilter">
+                        <option value="All">All Sellers</option>
+                    </select>
+                </div>
+            </div>
+            <div id="salesHistory" class="product-results empty-state"></div>
+        </section>
+    </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.3/xlsx.full.min.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/reports.js"></script>
+<script src="assets/js/script.js"></script>
+</body>
+</html>

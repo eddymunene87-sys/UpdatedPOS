@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Inventory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="logo"><h2>POS</h2></div>
+        <ul>
+            <li><a href="dashboard.html"><i class="fas fa-chart-line"></i><span>Dashboard</span></a></li>
+            <li><a href="sales.html"><i class="fas fa-cash-register"></i><span>Sales</span></a></li>
+            <li><a href="products.html"><i class="fas fa-box"></i><span>Products</span></a></li>
+            <li class="active"><a href="inventory.html"><i class="fas fa-warehouse"></i><span>Inventory</span></a></li>
+            <li><a href="categories.html"><i class="fas fa-tags"></i><span>Categories</span></a></li>
+            <li><a href="repairs.html"><i class="fas fa-tools"></i><span>Repairs</span></a></li>
+            <li><a href="reports.html"><i class="fas fa-file-alt"></i><span>Reports</span></a></li>
+        </ul>
+    </aside>
+    <main class="main-content">
+        <header class="topbar"><h1>Inventory</h1><div class="user"><i class="fas fa-user-circle"></i>Admin</div></header>
+
+        <section class="search-section">
+            <div class="report-summary">
+                <h2>System Inventory</h2>
+                <p>All items currently in the system are displayed below.</p>
+            </div>
+            <div id="inventoryMessage" class="product-message"></div>
+            <div id="inventoryList" class="product-results empty-state"></div>
+        </section>
+        <div id="inventoryModal" class="payment-modal hidden">
+            <div class="payment-modal-content">
+                <button id="closeInventoryModal" class="modal-close">×</button>
+                <h2>Edit Inventory Item</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="editItemName">Name</label>
+                        <input id="editItemName" type="text" placeholder="Item name">
+                    </div>
+                    <div class="form-group">
+                        <label for="editItemCategory">Category</label>
+                        <select id="editItemCategory"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editItemQuantity">Quantity</label>
+                        <input id="editItemQuantity" type="number" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="editItemPrice">Price</label>
+                        <input id="editItemPrice" type="number" min="0" step="0.01">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button id="saveInventoryButton" class="pay-button">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="assets/js/script.js"></script>
+<script src="assets/js/inventory.js"></script>
+</body>
+</html>

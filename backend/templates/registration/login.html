@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>POS Login</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body class="login-page">
+    <main class="login-card">
+        <h1>POS</h1>
+        <p>Sign in to continue.</p>
+        <form method="post">
+            {% csrf_token %}
+            <label for="id_username">Username</label>
+            <input id="id_username" name="username" autocomplete="username" autofocus required>
+            <label for="id_password">Password</label>
+            <input id="id_password" name="password" type="password" autocomplete="current-password" required>
+            {% if form.errors %}<div class="login-error">Your username or password is incorrect.</div>{% endif %}
+            <button class="pay-button" type="submit">Sign in</button>
+        </form>
+    </main>
+</body>
+</html>

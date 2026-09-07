@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Repairs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="logo"><h2>POS</h2></div>
+        <ul>
+            <li><a href="dashboard.html"><i class="fas fa-chart-line"></i><span>Dashboard</span></a></li>
+            <li><a href="sales.html"><i class="fas fa-cash-register"></i><span>Sales</span></a></li>
+            <li><a href="products.html"><i class="fas fa-box"></i><span>Products</span></a></li>
+            <li><a href="inventory.html"><i class="fas fa-warehouse"></i><span>Inventory</span></a></li>
+            <li><a href="categories.html"><i class="fas fa-tags"></i><span>Categories</span></a></li>
+            <li class="active"><a href="repairs.html"><i class="fas fa-tools"></i><span>Repairs</span></a></li>
+            <li><a href="reports.html"><i class="fas fa-file-alt"></i><span>Reports</span></a></li>
+        </ul>
+    </aside>
+    <main class="main-content">
+        <header class="topbar"><h1>Repairs</h1><div class="user"><i class="fas fa-user-circle"></i>Admin</div></header>
+
+        <section class="search-section">
+            <div class="report-summary">
+                <h2>Repair Tickets</h2>
+                <p>Search by ticket or owner, filter by status, and manage repair tickets.</p>
+            </div>
+            <div class="search-controls">
+                <div class="search-field">
+                    <label for="repairSearch">Search ticket / owner</label>
+                    <input id="repairSearch" type="text" placeholder="Search by ticket or owner...">
+                </div>
+                <div class="category-field">
+                    <label for="statusFilter">Filter status</label>
+                    <select id="statusFilter">
+                        <option value="All">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+                <div class="category-field">
+                    <label>&nbsp;</label>
+                    <button id="openRepairModalButton" class="pay-button">New Repair Ticket</button>
+                </div>
+            </div>
+            <div id="repairMessage" class="product-message"></div>
+            <div id="repairList" class="product-results empty-state"></div>
+        </section>
+        <div id="repairModal" class="payment-modal hidden">
+            <div class="payment-modal-content">
+                <button id="closeRepairModal" class="modal-close">×</button>
+                <h2>New Repair Ticket</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="repairOwnerName">Owner Name</label>
+                        <input id="repairOwnerName" type="text" placeholder="Owner name">
+                    </div>
+                    <div class="form-group">
+                        <label for="repairOwnerPhone">Owner Phone</label>
+                        <input id="repairOwnerPhone" type="tel" placeholder="Phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="repairDescription">Repair Description</label>
+                        <textarea id="repairDescription" placeholder="Describe the issue"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="repairPrice">Price</label>
+                        <input id="repairPrice" type="number" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="repairStatus">Status</label>
+                        <select id="repairStatus">
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button id="saveRepairButton" class="pay-button">Save Ticket</button>
+                </div>
+            </div>
+        </div>
+        <div id="repairDetailsModal" class="payment-modal hidden">
+            <div class="payment-modal-content">
+                <button id="closeRepairDetails" class="modal-close">×</button>
+                <h2>Repair Details</h2>
+                <div id="repairDetailsContent"></div>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/repairs.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/repairs.js"></script>
+<script src="assets/js/script.js"></script>
+</body>
+</html>

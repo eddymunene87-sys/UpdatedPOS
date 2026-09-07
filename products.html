@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Products</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="logo"><h2>POS</h2></div>
+        <ul>
+            <li><a href="dashboard.html"><i class="fas fa-chart-line"></i><span>Dashboard</span></a></li>
+            <li><a href="sales.html"><i class="fas fa-cash-register"></i><span>Sales</span></a></li>
+            <li class="active"><a href="products.html"><i class="fas fa-box"></i><span>Products</span></a></li>
+            <li><a href="inventory.html"><i class="fas fa-warehouse"></i><span>Inventory</span></a></li>
+            <li><a href="categories.html"><i class="fas fa-tags"></i><span>Categories</span></a></li>
+            <li><a href="repairs.html"><i class="fas fa-tools"></i><span>Repairs</span></a></li>
+            <li><a href="reports.html"><i class="fas fa-file-alt"></i><span>Reports</span></a></li>
+        </ul>
+    </aside>
+    <main class="main-content">
+        <header class="topbar"><h1>Product Check-In</h1><div class="user"><i class="fas fa-user-circle"></i>Admin</div></header>
+
+        <section class="search-section">
+            <div class="report-summary">
+                <h2>Add stock to the system</h2>
+                <p>Enter product details below to register new inventory items.</p>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input id="productName" type="text" placeholder="Enter name">
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Category</label>
+                    <select id="productCategory">
+                        <option value="">Select category</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="productQuantity">Quantity</label>
+                    <input id="productQuantity" type="number" min="1" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Price</label>
+                    <input id="productPrice" type="number" min="0" step="0.01" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label for="productBuyingPrice">Buying Price</label>
+                    <input id="productBuyingPrice" type="number" min="0" step="0.01" placeholder="0.00">
+                </div>
+            </div>
+            <button id="addProductButton" class="pay-button">Save Product</button>
+            <div id="productMessage" class="product-message"></div>
+            <section class="report-summary" style="margin-top:24px;">
+                <h2>Stock History</h2>
+                <p>Recently added stock entries with who added them and when.</p>
+            </section>
+            <div id="stockHistoryList" class="product-results empty-state"></div>
+        </section>
+    </main>
+</div>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/products.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/products.js"></script>
+<script src="assets/js/script.js"></script>
+</body>
+</html>
