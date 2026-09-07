@@ -121,14 +121,11 @@
                 <div class="payment-options">
                     <label><input type="radio" name="paymentMethod" value="Cash" checked> Cash</label>
                     <label><input type="radio" name="paymentMethod" value="M-Pesa"> M-Pesa</label>
-                </div>
-                <div class="form-group">
-                    <label for="saleUsername">Sales by</label>
-                    <input id="saleUsername" type="text" placeholder="Enter username" value="Admin">
+                    <label><input type="radio" name="paymentMethod" value="Card"> Card</label>
                 </div>
                 <div id="mpesaSection" class="mpesa-section hidden">
-                    <label for="mpesaNumber">M-Pesa Number</label>
-                    <input id="mpesaNumber" type="tel" placeholder="+2547XXXXXXXX" value="+254">
+                    <label for="mpesaNumber">M-Pesa number or reference</label>
+                    <input id="mpesaNumber" type="text" maxlength="50" placeholder="+2547XXXXXXXX or transaction reference">
                 </div>
                 <div class="modal-actions">
                     <button id="confirmPayButton" class="pay-button">Submit Payment</button>

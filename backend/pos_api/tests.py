@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .models import Category, Inventory, Product, Sale, StockEntry
+from .models import Category, Inventory, Product, Repair, Sale, StockAdjustment, StockEntry
 
 
 class PointOfSaleApiTests(APITestCase):
@@ -55,3 +55,45 @@ class PointOfSaleApiTests(APITestCase):
         self.inventory.refresh_from_db()
         self.assertEqual(self.inventory.quantity, 5)
         self.assertFalse(Sale.objects.exists())
+
+    def test_stock_adjustment_updates_inventory_and_preserves_audit_record(self):
+        response = self.client.post(
+            reverse('stock-adjustment-list'),
+            {'product': self.product.id, 'quantity_change': -2, 'reason': 'Damaged item'},
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.inventory.refresh_from_db()
+        adjustment = StockAdjustment.objects.get()
+        self.assertEqual(self.inventory.quantity, 3)
+        self.assertEqual((adjustment.quantity_before, adjustment.quantity_after), (5, 3))
+
+    def test_mpesa_sale_requires_and_saves_payment_reference(self):
+        missing_reference = self.client.post(
+            reverse('sale-list'),
+            {'payment_method': 'M-Pesa', 'items': [{'product': self.product.id, 'quantity': 1}]},
+            format='json',
+        )
+        saved_sale = self.client.post(
+            reverse('sale-list'),
+            {'payment_method': 'M-Pesa', 'payment_reference': 'QWE123ABC', 'items': [{'product': self.product.id, 'quantity': 1}]},
+            format='json',
+        )
+
+        self.assertEqual(missing_reference.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(saved_sale.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Sale.objects.get().payment_reference, 'QWE123ABC')
+
+    def test_deleting_repair_archives_it_without_losing_the_record(self):
+        repair = Repair.objects.create(
+            ticket_number='REPAIR-TEST', customer_name='Customer', customer_phone='0712345678',
+            device_name='Phone', issue_description='Screen', cost=Decimal('100.00'), created_by=self.user,
+        )
+
+        response = self.client.delete(reverse('repair-detail', args=[repair.id]))
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        repair.refresh_from_db()
+        self.assertTrue(repair.is_archived)
+        self.assertEqual(self.client.get(reverse('repair-list')).data, [])

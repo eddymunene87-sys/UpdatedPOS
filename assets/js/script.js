@@ -55,6 +55,27 @@ if (sidebar && topbar) {
     });
 }
 
+// Shared feedback helper. Every Django-rendered POS page loads this file;
+// business data is deliberately not sourced from the legacy localStorage module.
+function showToast(message, type = 'success') {
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('toast-visible'));
+    setTimeout(() => {
+        toast.classList.remove('toast-visible');
+        toast.addEventListener('transitionend', () => toast.remove(), { once: true });
+    }, 3200);
+}
+
 function getCookie(name) {
     return document.cookie.split('; ').find(row => row.startsWith(`${name}=`))?.split('=')[1] || '';
 }

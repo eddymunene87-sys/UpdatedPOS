@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Category, Inventory, Product, Repair, Sale, SaleItem, StockEntry
+from .models import Category, Inventory, Product, Repair, Sale, SaleItem, StockAdjustment, StockEntry
 from .serializers import (
     CategorySerializer,
     InventorySerializer,
@@ -16,6 +16,7 @@ from .serializers import (
     RepairSerializer,
     SaleCreateSerializer,
     SaleSerializer,
+    StockAdjustmentSerializer,
     StockEntrySerializer,
 )
 
@@ -42,7 +43,7 @@ class ProductViewSet(AuthenticatedModelViewSet):
 class InventoryViewSet(AuthenticatedModelViewSet):
     queryset = Inventory.objects.select_related('product').all()
     serializer_class = InventorySerializer
-    http_method_names = ('get', 'patch', 'head', 'options')
+    http_method_names = ('get', 'head', 'options')
 
 
 class StockEntryViewSet(AuthenticatedModelViewSet):
@@ -56,6 +57,28 @@ class StockEntryViewSet(AuthenticatedModelViewSet):
             inventory, _ = Inventory.objects.select_for_update().get_or_create(product=stock_entry.product)
             inventory.quantity = F('quantity') + stock_entry.quantity
             inventory.save(update_fields=('quantity', 'last_updated'))
+
+
+class StockAdjustmentViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = StockAdjustment.objects.select_related('product', 'adjusted_by').all()
+    serializer_class = StockAdjustmentSerializer
+
+    def perform_create(self, serializer):
+        with transaction.atomic():
+            product = serializer.validated_data['product']
+            inventory, _ = Inventory.objects.select_for_update().get_or_create(product=product)
+            quantity_before = inventory.quantity
+            quantity_after = quantity_before + serializer.validated_data['quantity_change']
+            if quantity_after < 0:
+                raise ValidationError({'quantity_change': f'Adjustment would make {product.name} stock negative.'})
+            inventory.quantity = quantity_after
+            inventory.save(update_fields=('quantity', 'last_updated'))
+            serializer.save(
+                adjusted_by=self.request.user,
+                quantity_before=quantity_before,
+                quantity_after=quantity_after,
+            )
 
 
 class SaleViewSet(
@@ -96,6 +119,7 @@ class SaleViewSet(
                 sale_number=f'SALE-{uuid4().hex[:12].upper()}',
                 customer_name=request_serializer.validated_data.get('customer_name', ''),
                 payment_method=request_serializer.validated_data['payment_method'],
+                payment_reference=request_serializer.validated_data.get('payment_reference', '').strip(),
                 total_amount=Decimal('0.00'),
                 cashier=request.user,
             )
@@ -124,7 +148,7 @@ class SaleViewSet(
 
 
 class RepairViewSet(AuthenticatedModelViewSet):
-    queryset = Repair.objects.select_related('created_by').all()
+    queryset = Repair.objects.select_related('created_by').filter(is_archived=False)
     serializer_class = RepairSerializer
 
     def perform_create(self, serializer):
@@ -132,3 +156,16 @@ class RepairViewSet(AuthenticatedModelViewSet):
             created_by=self.request.user,
             ticket_number=f'REPAIR-{uuid4().hex[:12].upper()}',
         )
+
+    def perform_update(self, serializer):
+        repair = serializer.save()
+        if repair.status == Repair.Status.COMPLETED and repair.completed_at is None:
+            from django.utils import timezone
+            repair.completed_at = timezone.now()
+            repair.save(update_fields=('completed_at',))
+
+    def destroy(self, request, *args, **kwargs):
+        repair = self.get_object()
+        repair.is_archived = True
+        repair.save(update_fields=('is_archived',))
+        return Response(status=status.HTTP_204_NO_CONTENT)

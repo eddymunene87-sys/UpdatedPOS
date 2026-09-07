@@ -63,6 +63,25 @@ class StockEntry(models.Model):
         return f'{self.product.name}: +{self.quantity}'
 
 
+class StockAdjustment(models.Model):
+    """An auditable manual correction to an inventory quantity."""
+
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='stock_adjustments')
+    quantity_change = models.IntegerField()
+    quantity_before = models.PositiveIntegerField()
+    quantity_after = models.PositiveIntegerField()
+    reason = models.CharField(max_length=250)
+    adjusted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='stock_adjustments')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name_plural = 'stock adjustments'
+
+    def __str__(self):
+        return f'{self.product.name}: {self.quantity_change:+d}'
+
+
 class Sale(models.Model):
     class PaymentMethod(models.TextChoices):
         CASH = 'Cash', 'Cash'
@@ -72,6 +91,7 @@ class Sale(models.Model):
     sale_number = models.CharField(max_length=50, unique=True)
     customer_name = models.CharField(max_length=150, blank=True)
     payment_method = models.CharField(max_length=20, choices=PaymentMethod.choices, default=PaymentMethod.CASH)
+    payment_reference = models.CharField(max_length=50, blank=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     cashier = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='sales')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -111,6 +131,7 @@ class Repair(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='repairs_created')
     created_at = models.DateTimeField(auto_now_add=True)
     completed_at = models.DateTimeField(null=True, blank=True)
+    is_archived = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created_at']

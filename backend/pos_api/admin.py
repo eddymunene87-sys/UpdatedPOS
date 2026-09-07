@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Inventory, Product, Repair, Sale, SaleItem, StockEntry
+from .models import Category, Inventory, Product, Repair, Sale, SaleItem, StockAdjustment, StockEntry
 
 
 @admin.register(Category)
@@ -26,6 +26,13 @@ class StockEntryAdmin(admin.ModelAdmin):
     list_display = ('product', 'quantity', 'unit_cost', 'added_by', 'created_at')
     list_filter = ('created_at',)
     search_fields = ('product__name', 'added_by__username')
+
+
+@admin.register(StockAdjustment)
+class StockAdjustmentAdmin(admin.ModelAdmin):
+    list_display = ('product', 'quantity_change', 'quantity_before', 'quantity_after', 'adjusted_by', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('product__name', 'adjusted_by__username', 'reason')
 
 
 class SaleItemInline(admin.TabularInline):
